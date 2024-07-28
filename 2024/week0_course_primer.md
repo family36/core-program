@@ -160,27 +160,37 @@ Here are the exercises for this module. Collaborate with others to find the answ
 Summarize each of the following concepts in a few sentences:
 
 1. Three-Colouring Graph problem with Hats
-2.  Ali Baba’s Cave analogy
-3.   The difference between interactive and non-interactive proofs
-
+グラフの三色問題において，「隣接するノードが互いに異なる色」であることをゼロ知識証明する．
+証明者はグラフのノードを塗り分け，帽子をかぶせる．検証者はエッジを選択し，両端ノードの色を確認できる．
+エッジ選択を複数回実行することで塗分けが妥当であることを検証する．
+3.  Ali Baba’s Cave analogy
+アリババの洞窟には二つの入り口があり，両者は一つの扉のみで繋がっている．
+扉は合言葉でのみ開き，証明者は知っていることをゼロ知識証明する．
+証明者は扉の前に待機し，検証者が入り口から帰り道を指定する．これを複数回実行することで知っていることを検証する．
+5.   The difference between interactive and non-interactive proofs
+対話型は，証明者と検証者が対話を複数回繰り返すことで命題が真である確率を上げる方式．
+非対話型は，一度のセットアップ以降対話を必要としない方式．
 ### Modular Arithmetic
 
 Solve the following problems and gain a practical understanding of modular arithmetic:
 
-1. $7\ mod\ 13$
-2. $15\ mod\ 13$
-3. $(7+15)\ mod\ 13$
-4. $(7\ mod\ 13 + 15\ mod\ 13)\ mod\ 13$
+1. $7\ mod\ 13 = 7$
+2. $15\ mod\ 13 = 2$
+3. $(7+15)\ mod\ 13 = 22 mod 13 = 9$
+4. $(7\ mod\ 13 + 15\ mod\ 13)\ mod\ 13 = (7 + 2) mod 13 = 9$
 
 If the results of the third and fourth calculations match, they follow a "group structure". Can you determine if these do?
-
+???
 ### Generators
 
 Consider the cyclic group $(Z_{12}, +\ mod\ 12)$, commonly referred to as the "additive group of integers modulo 12". Address the following points:
 
 1. What does the term 'generator' mean?
-2. Can you find a generator for this group?
-3. Are there other generators for this group? If yes, what are they?
+ある元同士を複数回二項演算させることで群の全ての元を表現できるとき，この元を生成元という．また，この集合は巡回群である．
+3. Can you find a generator for this group?
+1
+5. Are there other generators for this group? If yes, what are they?
+1, 5, 7, 11
 
 ### Implementing a Modular Arithmetic Calculator
 
@@ -207,6 +217,20 @@ function modularCalculator(op, num1, num2, mod) {
 modularCalculator('+', 10, 15, 12); // Should return: 1
 modularCalculator('-', 10, 15, 12); // Should return: 7
 modularCalculator('*', 10, 15, 12); // Should return: 6
+```
+
+```python
+def modularCalculator(op, num1, num2, mod):
+    if op == "+":
+        return (num1 + num2) % mod
+    elif op == "*":
+        return (num1 * num2) % mod
+    elif op == "-":
+        return (num1 - num2) % mod
+
+print(modularCalculator('+', 10, 15, 12)) # 1
+print(modularCalculator('-', 10, 15, 12)) # 7
+print(modularCalculator('*', 10, 15, 12)) # 6
 ```
 
 Feel free to use `console.log` statements in your code to verify that your function is working as expected. For convenience, consider using https://repljs.com/ and pasting in the above code snippet to get started.
