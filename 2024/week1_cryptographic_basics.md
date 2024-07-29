@@ -220,7 +220,6 @@ template MerkleTreeInclusionProof(nLevels) {
 component main = MerkleTreeInclusionProof(20);
 ```
 
-
 ### Tips
 
 You can always reference circomlib for examples of how to use existing circuits. You can find the circomlib [here](https://github.com/iden3/circomlib). Writing a simple circuit is not too dififcult, but it can be a bit tricky to get the constraints right and optimize the circuit. circomlib has many examples that you can use as a reference.
@@ -412,8 +411,29 @@ If you would like to know more about it, you can check out the following resourc
 # 💪 Exercises
 
 1. **Symmetric vs. Asymmetric Encryption**: What are the key differences between symmetric and asymmetric encryption? Provide a practical use case for each.
+
+対称暗号化：復号化と暗号化を同じ鍵で行う 
+例：ストリームの暗号化  
+非対称暗号化：復号化と暗号化を異なる鍵で行う  
+例：デジタル署名
+
 2. **Public-Key Cryptography and Key Exchange Protocols**: How can the Diffie-Hellman protocol enhance security in a messaging application?
+
+メッセージを暗号化して送ることが出来る  
+
 3. **Hash Functions**: What features make SHA-256 and Poseidon good hash functions for ensuring data integrity? Mention one unique advantage of Poseidon.
+
+データの整合性：出力されるhash値は256bitの二進数 ⇒ 被らない (衝突困難性)  
+Poseidonの利点：演算回数が少ない
+
 4. **Merkle Trees**: Explain how Merkle trees can help verify data in a large database efficiently.
+
+データ数nに対してlog(n)のhash値のみで，マークルツリーに含まれていることを検証できる．
+
 5. **Cryptographic Commitments**: How can Pedersen Commitments be used in a blockchain protocol to maintain transaction privacy?
+
+Tx_inとTx_outを非公開にする．Tx_inの合計とTx_outの合計が一致することを，Pedersen Commitmentsを利用して証明する．
+
 6. **Digital Signatures**: How can you verify the authenticity of a digitally signed document?
+
+送信元の秘密鍵で署名された文書は，送信元の公開鍵で検証できる．
