@@ -47,6 +47,27 @@ Once that works, try to make a circuit to prove the multiplication of three numb
 
 Make sure to save these circuits and present them at the end of the week.
 
+```circom
+pragma circom 2.1.6;
+
+template MultipleProof() {
+    // declaration of signals
+    signal input a;
+    signal input b;
+    signal output mul;
+
+    // constraint
+    mul <== a * b;
+}
+
+component main = MultipleProof();
+
+/* INPUT = {
+    "a": 3,
+    "b": 5
+} */
+```
+
 ### Write a circuit to prove input to hash
 
 Now let's take it to the next level, we will write a circuit to prove the input to a hash. In order to do this, we will use the Poseidon hashing algorithm. You will need to include the following line at the top:
@@ -68,6 +89,30 @@ You might want to research what a `component` is in the Circom syntax.
 Use this as the input:
 
 ```circom
+/* INPUT = {
+    "preimage": "12345",
+    "hash": "4267533774488295900887461483015112262021273608761099826938271132511348470966"
+} */
+```
+
+```circom
+pragma circom 2.1.6;
+
+include "circomlib/poseidon.circom";
+
+template HashProof () {
+    signal input preimage
+    signal input hash;
+    signal output hashOutput;
+
+    component hasher = Poseidon(1);
+    hasher.inputs[0] <== preimage;
+    hashOutput <== hasher.out;
+    hashOutput === hash;
+}
+
+component main = HashProof();
+
 /* INPUT = {
     "preimage": "12345",
     "hash": "4267533774488295900887461483015112262021273608761099826938271132511348470966"
@@ -127,6 +172,54 @@ You may also need a Mux. Mux is a component that takes two inputs and outputs on
 poseidons[i] = Poseidon(2);
 mux[i] = MultiMux1(2);
 ```
+
+```circom
+pragma circom 2.0.0;
+
+include "../../../circomlib/circuits/poseidon.circom";
+include "../../../circomlib/circuits/mux1.circom";
+
+template MerkleTreeInclusionProof(nLevels) {
+    signal input leaf;
+    signal input pathIndices[nLevels]; //hash値が右左どちらにあるかを示す．左が0，右が1
+    signal input siblings[nLevels]; //兄弟ノード
+
+    signal output root;
+
+    component poseidons[nLevels]; //nLevels : マークルツリーの階層数
+    component mux[nLevels];
+
+    signal hashes[nLevels + 1];
+    hashes[0] <== leaf;
+
+    for (var i = 0; i < nLevels; i++) {
+        pathIndices[i] * (1 - pathIndices[i]) === 0; //pathIndicesが0 or 1であることを検証
+
+        poseidons[i] = Poseidon(2); //2入力hash関数
+        mux[i] = MultiMux1(2);
+
+        // hash関数の左入力，右入力が正しい順番で入力されるようにする処理
+        // indicesはhashesが左右どちらにあるかを示す
+        mux[i].c[0][0] <== hashes[i];
+        mux[i].c[0][1] <== siblings[i];
+
+        mux[i].c[1][0] <== siblings[i];
+        mux[i].c[1][1] <== hashes[i];
+
+        mux[i].s <== pathIndices[i];
+
+        poseidons[i].inputs[0] <== mux[i].out[0];
+        poseidons[i].inputs[1] <== mux[i].out[1];
+
+        hashes[i + 1] <== poseidons[i].out;
+    }
+
+    root <== hashes[nLevels];
+}
+
+component main = MerkleTreeInclusionProof(20);
+```
+
 
 ### Tips
 
